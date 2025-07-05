@@ -1,0 +1,21 @@
+1. File sudah dipecah, fokuslah ke analisaVideo dan mediapipeScript
+
+2. PR : tambah disabled di button analize (all) (sudah)
+
+3. analisa video pertama berhasil, diulang (gagal, harus refresh); untuk video selanjutnya belum
+
+nilai sudah difoto untuk 2 video berbeda satu tugas sama (lempar)
+
+4. PR : mencari range penilaian agar sesuai untuk menentukan penilaian
+catatan : rata-rata ini tidak lah real, karena merupakan rata-rata nilai sebelumnya ditambah yang baru lalu di bagi 2 (harusnya tidak seperti itu);
+
+
+05/07/2025 03:05
+1. ProcessFrame (RequestAnimationFrame) dibatasai ke 5 FPS
+2. Video akan diproses hanya selama 10 detik
+3. Hasil analisa adalah sebagai berikut :
+	- Untuk video yang berbeda sekali bernilai < 70 (rata-rata 68)
+	- Untuk video yang sama beda orang bernilai 80-an (kira-kira 82)
+	- Untuk video yang sama dengan orang sama bernilai > 90 (rata-rata 98)
+
+Catatan : apakah penilaian perlu diupdate ?
