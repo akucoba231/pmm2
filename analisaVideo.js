@@ -75,7 +75,7 @@ function tampilkanNilai(skill){
     let buttonAnalize = document.getElementById(`${skill}-analize`);
     buttonAnalize.setAttribute('disabled', 'disabled');
     buttonAnalize.textContent = "Menunggu video baru, (tekan reset)";
-
+    buttonAnalize.style.background = "rgba(239,239,239,.7)";
     document.getElementById(`${skill}-result`).style.display = 'block';
     console.log('ok')
     if (skill == "catch") {
