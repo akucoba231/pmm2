@@ -99,7 +99,7 @@ function compareLandmarks(lm1, lm2) {
   // untuk stop jika sudah 15 detik
 
   let startTime = null;
-  const MAX_DURATION = 10000; // batas video 15 detik
+  const MAX_DURATION = 15000; // batas video 15 detik
 
   // pemanggilan proses puncaknya di sini
   async function processFrames(timestamp) {
