@@ -108,9 +108,15 @@ function compareLandmarks(lm1, lm2) {
   	const elapsed = timestamp - startTime;
   	if (elapsed >= MAX_DURATION) {
     	console.log("⏱ Penilaian selesai (15 detik)");
+    	video1.pause();
+    	video2.pause();
     	return; // Hentikan penilaian
   	}
-  	if (video1.paused || video2.paused || video1.ended || video2.ended) return;
+  	if (video1.paused || video2.paused || video1.ended || video2.ended){
+  		video1.pause();
+  		video2.pause();
+  		return;
+  	}
 
   	if(timestamp - lastProcessed >= intervalMs){
       // ini akan menggambar per frame (karena ada requestAnimationFrame)
