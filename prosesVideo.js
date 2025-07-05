@@ -15,6 +15,7 @@ Array.from(inputFile).forEach((item)=>{
 		//gunakan tmp2 sebagai controller
 		video1.src = cekTest(tmp2);
 		console.log(video1.src);
+		video1.load();
 		video2.src = URL.createObjectURL(e.target.files[0]);
 
 		// ubah status tombol analize
