@@ -186,7 +186,7 @@ function compareLandmarks(lm1, lm2) {
 
   async function preloadModels(el) {
   	let buttonAnalize = el;
-  	if(!modelsReady){
+  	//if(!modelsReady){
   		const dummy = document.createElement('canvas');
   		dummy.width = 320;
   		dummy.height = 240;
@@ -202,12 +202,12 @@ function compareLandmarks(lm1, lm2) {
   		buttonAnalize.removeAttribute('disabled');
   		buttonAnalize.textContent = "Video siap diproses";
   		buttonAnalize.style.background = "linear-gradient(135deg, var(--maroon-dark), var(--maroon-light))";
-  	}
-  	else {
-  		buttonAnalize.removeAttribute('disabled');
-  		buttonAnalize.textContent = "Video siap diproses";
-      buttonAnalize.style.background = "linear-gradient(135deg, var(--maroon-dark), var(--maroon-light))";
-  	}
+  	// }
+  	// else {
+  		//buttonAnalize.removeAttribute('disabled');
+  		//buttonAnalize.textContent = "Video siap diproses";
+      //buttonAnalize.style.background = "linear-gradient(135deg, var(--maroon-dark), var(--maroon-light))";
+  	// }
   }
 
     // trigger di sini, tetapi video src belum didefinisi
