@@ -3,6 +3,7 @@
     --maroon-light: #4169e1;
     --cream: #e6f0fa;
     --white: rgba(255,255,255,.5);
+    --linear: linear-gradient(135deg, var(--maroon-dark), var(--maroon-light));
 }
 
 body {
@@ -305,4 +306,8 @@ footer {
 
 #export {
     display: none;
+}
+
+.btn-linear {
+    background: var(--linear);
 }
