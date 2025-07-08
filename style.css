@@ -20,7 +20,7 @@ body {
 }
 
 header {
-    background-image: url('assets/banner.jpg') no-repeat left 95%;
+    background: url('assets/banner.jpg') no-repeat left 95%;
     background-size: 100%;
     color: var(--maroon-dark);
     text-shadow: 2px 2px #fff;
