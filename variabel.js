@@ -12,3 +12,5 @@ let tmpSkill = "";
 let tmpCount = 0;
 let averageScore = 0;
 
+let errorCatcher = document.getElementById('errorCatcher');
+let loadScreenActive = true;
