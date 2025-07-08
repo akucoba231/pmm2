@@ -2,8 +2,12 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="author" content="Kang Cecep" />
+    <meta name="og:author" content="Kang Cecep" />
+    <meta name="og:url" content="https://penilaian-gerak-manipulatif.netlify.app/">
+    <meta name="og:site_name" content="Penilaian Gerak Manipulatif" />
+    <meta name="og:image" content="">
     <meta name="description" content="Program Analisa Video dengan Mediapipe">
     <title>PMM - Penilaian Manipulatif Movement</title>
     <link rel="stylesheet" href="style.css">
@@ -20,6 +24,19 @@
         <div class="logo">PMM</div>
         <div class="tagline">Penilaian Manipulatif Movement - Analisis Gerakan Berbasis AI</div>
     </header>
+
+    <div id="hidden">
+        <video id="vidH1"></video>
+        <video id="vidH2"></video>
+        <canvas id="canH1"></canvas>
+        <canvas id="canH2"></canvas>
+        <button id="hideButton"></button>
+    </div>
+
+    <div id="loadScreen">
+        <h3>Memuat model mediapipe<span>.....</span></h3>
+        <p id="errorCatcher"></p>
+    </div>
     
     <div class="container">
         <div class="card">
@@ -249,7 +266,8 @@
     </div>
     
     <footer>
-        &copy; 2025 PMM (Penilaian Manipulatif Movement) - Sistem Analisis Gerakan
+        &copy; 2025 PMM (Penilaian Manipulatif Movement) - Sistem Analisis Gerakan oleh <strong>Kang Cecep</strong> <br />
+        free background photos from <a style="color: #fff;" href="https://id.pngtree.com/freebackground/color-tennis-sport-advertising-background_970644.html?sol=downref&id=bef">PNGTREE</a>
     </footer>
 
     <script src="variabel.js"></script>
