@@ -96,7 +96,7 @@ function tampilkanNilai(skill){
         //console.log(tmp)
 
     // fungsi yang paling riskan malah di sini
-        let score = Math.round(averageScore*100);
+        let score = Math.round(averageScore*1000)/10;
         tmp.textContent = score;
         return score;
     }
