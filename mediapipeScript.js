@@ -12,6 +12,9 @@ function getVideoCanvas(vid1,vid2,canv1,canv2){
 	video1 = document.getElementById(vid1);
 	video2 = document.getElementById(vid2);
 	
+	video1.muted = true;
+	video2.muted = true;
+
 	canvas1 = document.getElementById(canv1);
 	canvas2 = document.getElementById(canv2);
 	ctx1 = canvas1.getContext('2d');
@@ -36,6 +39,14 @@ pose1.onResults(results => {
 	landmarks1 = results.poseLandmarks;
 	drawResults(results, canvas1, ctx1);
 });
+
+pose1.onError = (e) => {
+	errorCatcher.textContent = "mediapipe error : " + JSON.stringify(e);
+}
+
+pose2.onError = (e) => {
+	errorCatcher.textContent = "mediapipe error : " + JSON.stringify(e);
+}
 
 pose2.onResults(results => {
 	landmarks2 = results.poseLandmarks;
@@ -186,7 +197,6 @@ function compareLandmarks(lm1, lm2) {
 
   async function preloadModels(el) {
   	let buttonAnalize = el;
-  	//if(!modelsReady){
   		const dummy = document.createElement('canvas');
   		dummy.width = 320;
   		dummy.height = 240;
@@ -202,12 +212,8 @@ function compareLandmarks(lm1, lm2) {
   		buttonAnalize.removeAttribute('disabled');
   		buttonAnalize.textContent = "Video siap diproses";
   		buttonAnalize.style.background = "linear-gradient(135deg, var(--maroon-dark), var(--maroon-light))";
-  	// }
-  	// else {
-  		//buttonAnalize.removeAttribute('disabled');
-  		//buttonAnalize.textContent = "Video siap diproses";
-      //buttonAnalize.style.background = "linear-gradient(135deg, var(--maroon-dark), var(--maroon-light))";
-  	// }
+  		loadScreenActive = false;
+  		errorCatcher.textContent = "mediapipe siap";
   }
 
     // trigger di sini, tetapi video src belum didefinisi
@@ -222,3 +228,20 @@ function compareLandmarks(lm1, lm2) {
     /* untuk pemanggilan awal model mediapipe gunakan preloadModels 
     (bisa korbankan 1 sesi canvas atau buat canvas hidden) */
 
+let hideButton = document.getElementById('hideButton');
+getVideoCanvas('vidH1','vidH2','canH1','canH2');
+preloadModels(hideButton);
+
+
+function loadScreen(){
+	let ls = document.getElementById('loadScreen');
+
+	let x = setInterval(()=>{
+		if(loadScreenActive == false){
+			ls.style.display = "none";
+			clearInterval(x);
+		}
+	}, 1000);
+}
+
+loadScreen();
