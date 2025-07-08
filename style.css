@@ -10,7 +10,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background: url('assets/banner.jpg');
+    background-image: url('assets/banner.jpg');
     background-repeat: no-repeat;
     background-position: 0% 100%;
     background-size: 100%;
@@ -20,7 +20,7 @@ body {
 }
 
 header {
-    background: url('assets/banner.jpg') no-repeat left 95%;
+    background-image: url('assets/banner.jpg') no-repeat left 95%;
     background-size: 100%;
     color: var(--maroon-dark);
     text-shadow: 2px 2px #fff;
