@@ -350,3 +350,8 @@ footer {
         width: 50px;
     }
 }
+
+
+#table-record {
+    background: rgab(255,255,255,.8);
+}
