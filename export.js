@@ -26,6 +26,13 @@ function showAllRecord(){
     let exportXLS = document.getElementById('export')
 
     exportXLS.onclick = ()=>{
+        if(confirm('Apakah Anda ingin menghapus juga semua data penilaian ?'))
+        {
+            localStorage.removeItem('dataNilai');
+        }
+        else {
+            // do nothing
+        }
         exportToXLS();
     }
 
