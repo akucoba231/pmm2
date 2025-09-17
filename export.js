@@ -26,14 +26,19 @@ function showAllRecord(){
     let exportXLS = document.getElementById('export')
 
     exportXLS.onclick = ()=>{
-        if(confirm('Apakah Anda ingin menghapus juga semua data penilaian ?'))
-        {
-            localStorage.removeItem('dataNilai');
+        if(localStorage.getItem('dataNilai') == null){
+            alert('Data tidak ditemukan, atau sudah diihapus');
         }
         else {
-            // do nothing
+            if(confirm('Apakah Anda ingin menghapus juga semua data penilaian ?'))
+            {
+                localStorage.removeItem('dataNilai');
+            }
+            else {
+
+            }
+            exportToXLS();
         }
-        exportToXLS();
     }
 
 
