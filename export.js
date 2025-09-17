@@ -30,7 +30,7 @@ function showAllRecord(){
             alert('Data tidak ditemukan, atau sudah dihapus');
         }
         else {
-            konfirmasi('Apakah Anda ingin menghapus juga semua data penilaian ?')            
+            konfirmasi('Apakah Anda ingin menghapus semua data penilaian juga ?')            
         }
     }
 
@@ -39,7 +39,6 @@ function showAllRecord(){
         return alert('No data found !');
     }
     else {
-
         allScoreWrapper.style.display = "block"
         exportXLS.style.display = "block";
 
@@ -105,6 +104,9 @@ function konfirmasi(str){
         document.body.removeChild(wrapper);
         localStorage.removeItem('dataNilai');
         exportToXLS();
+        let allScoreWrapper = document.getElementById('all-score-wrapper');
+        allScoreWrapper.style.display = "none";
+        resetForm();
     }    
     tidak.onclick = () => {
         document.body.removeChild(wrapper);
