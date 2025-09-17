@@ -306,7 +306,7 @@ footer {
     font-family: sans-serif;
 }
 
-#export {
+#export, #export-delete {
     display: none;
 }
 
