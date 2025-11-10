@@ -12,6 +12,7 @@ function resetForm() {
         let input = document.getElementsByTagName('input');
         let video = document.getElementsByTagName('video');
         let canvas = document.getElementsByTagName('canvas');
+        let analysisResult = document.getElementsByClassName('analysis-result');
         Array.from(input).forEach((item)=>{
             item.value = "";
         })
@@ -22,7 +23,8 @@ function resetForm() {
         Array.from(canvas).forEach((item)=>{
             const tmpCtx = item.getContext('2d');
             tmpCtx.fillStyle = "rgba(239,239,239,.7)";
-            tmpCtx.fillRect(0, 0, item.width, item.height);
+            //tmpCtx.fillRect(0, 0, item.width, item.height);
+            tmpCtx.clearRect(0,0, item.width, item.height);
         })
 
         for(const obj in scores){
@@ -31,6 +33,10 @@ function resetForm() {
 
         Array.from(button).forEach((item)=>{
             item.textContent = "Menunggu video diunggah";
+        })
+
+        Array.from(analysisResult).forEach((item)=>{
+            item.style.display = "none";
         })
 
         
