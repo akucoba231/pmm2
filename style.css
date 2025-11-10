@@ -6,6 +6,13 @@
     --linear: linear-gradient(135deg, var(--maroon-dark), var(--maroon-light));
 }
 
+* {
+    outline: 0;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -40,17 +47,17 @@ header {
 }
 
 .container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
+    max-width: 960px;
+    margin: 0.5em auto;
+    padding: 0 0.5em;
 }
 
 .card {
     background: var(--white);
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    padding: 0.5em 1em 1em 1em;
+    margin-bottom: 0.5em;
 }
 
 h2 {
@@ -61,13 +68,13 @@ h2 {
 }
 
 .form-group {
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.5em;
     padding: 0 3%;
 }
 
 label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25em;
     font-weight: 600;
 }
 
@@ -80,11 +87,11 @@ input, select {
 }
 
 .video-container {
-    background: rgba(239,239,239,.7);
+    background-color: rgba(239,239,239,.7);
     border-radius: 4px;
-    padding: 1rem;
+    padding: 0.5em;
     text-align: center;
-    margin: 1rem 0;
+    margin: 0.25em 0;
     min-height: 100px;
     display: flex;
     flex-direction: column;
@@ -94,18 +101,22 @@ input, select {
 
 .throw {
     background: url('assets/throw.png') no-repeat right bottom;
+    background-size: 20%;
 }
 
 .catch {
     background: url('assets/catch.png') no-repeat right bottom;
+    background-size: 20%;
 }
 
 .hit {
     background: url('assets/hit.png') no-repeat right bottom;
+    background-size: 20%;
 }
 
 .kick {
     background: url('assets/kick.png') no-repeat right bottom;
+    background-size: 20%;
 }
 
 .video-placeholder {
@@ -115,8 +126,8 @@ input, select {
     width: 660px;
     height: auto;
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
     gap: 10px;
     vertical-align: middle;
@@ -125,13 +136,15 @@ input, select {
 
 .video-placeholder video, .video-placeholder canvas {
     position: relative;
-    width: 320px;
-    height: 240px;
+    width: 300px;
+    aspect-ratio: 16 / 9;
     object-fit: contain;
     border: 1px solid #999;
 }
 
-
+.video-container p {
+    margin: 0 0 0.25em 0;
+}
 
 
 button {
@@ -151,9 +164,12 @@ button:hover {
 }
 
 .analysis-result {
-    margin-top: 2rem;
+    margin-top: 0.25em;
     border-top: 1px solid #eee;
-    padding-top: 1.5rem;
+    padding-top: 0.25em;
+    /* untuk styling , hapus nanti */
+    /*display: block;*/
+    
 }
 
 .skill-table {
@@ -216,16 +232,6 @@ footer {
     border-left: 5px solid var(--maroon-light);
 }
 
-@media (max-width: 768px) {
-    .container {
-        padding: 0 1rem;
-    }
-    
-    .logo {
-        font-size: 2rem;
-    }
-}
-
 
 .box {
   position: absolute;
@@ -247,7 +253,7 @@ footer {
 
 .overall-table tr td {
     margin: 1%;
-    padding: 2%;
+    padding: 0.5em;
     border-radius: 5px;
     border: 0.5px solid #000;
 }
@@ -259,7 +265,7 @@ footer {
 }
 
 .all-score {
-    margin-top: 3%;
+    margin-top: 1em;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -287,21 +293,27 @@ footer {
 
 #all-score-wrapper {
     display: none;
-    margin-top: 2%;
+    margin-top: 0.5em;
     width: 100%;
     height: auto;
     overflow: scroll;
     border-radius: 10px;
+    padding-bottom: 1em;
+}
+
+#all-score-wrapper table {
+    background: #fff;
 }
 
 #all-score-wrapper table tr > th, td {
     border: 1px solid #aaa;
-    padding: 1px 2px;
+    padding: 0.5em;
     white-space: nowrap;
+    font-weight: bold;
 }
 
 #all-score-wrapper table tr th {
-    background: #5a5a5a;
+    background: var(--maroon-light);
     color: #fff;
     font-family: sans-serif;
 }
@@ -354,4 +366,27 @@ footer {
 
 #table-record {
     background: rgab(255,255,255,.8);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .logo {
+        font-size: 2rem;
+    }
+}
+
+@media only screen and (max-width: 360px){
+    .container {
+        max-width: 360px;    
+    }   
+    .video-placeholder {
+        width: 330px;
+    }
+    .video-placeholder video, .video-placeholder canvas {
+        width: 160px;
+    }
+
 }
