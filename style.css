@@ -168,8 +168,8 @@ button:hover {
     border-top: 1px solid #eee;
     padding-top: 0.25em;
     /* untuk styling , hapus nanti */
-    /*display: block;*/
-    
+    /*display: none;*/
+
 }
 
 .skill-table {
@@ -256,6 +256,7 @@ footer {
     padding: 0.5em;
     border-radius: 5px;
     border: 0.5px solid #000;
+    background: #fff;
 }
 .overall-table tr td:first-child{
     background: var(--maroon-light);
