@@ -849,6 +849,7 @@ function getTanggal(){
 }
 
 // export to xlsx (unchanged)
+/*
 function exportToXLS() {
     let newDate = getTanggal();
     newDate = newDate.replaceAll("/", "-");
@@ -864,6 +865,43 @@ function exportToXLS() {
     XLSX.utils.book_append_sheet(wb, ws, "Data Hasil Penilaian");
     XLSX.writeFile(wb, "PMM_data_analisa_video_"+ newDate +".xlsx");
 }
+*/
+
+// export to xlsx (fixed for Android WebView)
+function exportToXLS() {
+    let newDate = getTanggal();
+    newDate = newDate.replaceAll("/", "-").replaceAll(" ", "_").replaceAll(":", "-");
+
+    const table = document.getElementById('table-record');
+    if (!table) return;
+
+    const ws = XLSX.utils.table_to_sheet(table, {
+        cellDates: true,
+        dateNF: "dd/mm/yyyy hh:mm:ss",
+    });
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Data Hasil Penilaian");
+
+    // Jika tidak ada Android interface → browser biasa
+    if (!window.Android) {
+        XLSX.writeFile(wb, "PMM_data_analisa_video_" + newDate + ".xlsx");
+        return;
+    }
+
+    // Jika di WebView Android → convert ke Base64
+    const base64 = XLSX.write(wb, {
+        bookType: "xlsx",
+        type: "base64"
+    });
+
+    // Kirim ke Android untuk disimpan sebagai file
+    window.Android.saveExcelBase64(
+        base64,
+        "PMM_data_analisa_video_" + newDate + ".xlsx"
+    );
+}
+
 
 function showAllRecord(){
     let allScoreWrapper = document.getElementById('all-score-wrapper');
