@@ -413,113 +413,146 @@ pose2.onError = (e) => {
 
 // ------------------ FRAME PROCESSING / LOOP ------------------
 
+// ------------------ FRAME PROCESSING / LOOP (FINAL - SELF LOOPING) ------------------
+
 let lastProcessed = 0;
 let intervalMs = 200; // default
 
 const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
-const FRAME_INTERVAL = isMobile ? 400 : 200; // 2.5 fps on mobile
+const FRAME_INTERVAL = isMobile ? 400 : 200;
 intervalMs = FRAME_INTERVAL;
 
 let startTime = null;
 const MAX_DURATION = 12000; // 12s
 
-async function processFrames(timestamp) {
-    if (!startTime) startTime = timestamp;
+//let rafID = null; // tetap pakai nama lama (interval ID) //sudah ada
 
-    const elapsed = timestamp - startTime;
-    if (elapsed >= MAX_DURATION) {
-        console.log("⏱ Penilaian selesai (12 detik)");
-        if(video1) video1.pause();
-        if(video2) video2.pause();
-        cancelAnimationFrame(rafID);
-        return;
-    }
-    if (!video1 || !video2) {
-        rafID = requestAnimationFrame(processFrames);
-        return;
-    }
-    if (video1.paused || video2.paused || video1.ended || video2.ended){
-        if(video1) video1.pause();
-        if(video2) video2.pause();
-        cancelAnimationFrame(rafID);
-        return;
+// ================== FRAME CORE ==================
+async function processFrames() {
+
+    // -------- START LOOP (hanya sekali) --------
+    if (!rafID) {
+        lastProcessed = 0;
+        startTime = null;
+        rafID = setInterval(processFrames, intervalMs);
+        return; // keluar, biar interval yang jalan
     }
 
-    if(timestamp - lastProcessed >= intervalMs){
-        // draw frames to canvas (for pose send)
-        if(ctx1 && canvas1 && video1.videoWidth && video1.videoHeight){
+    // -------- ASYNC LOCK (WAJIB untuk device jadul) --------
+    if (processFrames.isBusy) return;
+    processFrames.isBusy = true;
+
+    const timestamp = Date.now();
+
+    try {
+        if (!startTime) startTime = timestamp;
+
+        const elapsed = timestamp - startTime;
+        if (elapsed >= MAX_DURATION) {
+            console.log("⏱ Penilaian selesai (12 detik)");
+            if (video1) video1.pause();
+            if (video2) video2.pause();
+            clearInterval(rafID);
+            rafID = null;
+            return;
+        }
+
+        if (!video1 || !video2) return;
+
+        if (video1.paused || video2.paused || video1.ended || video2.ended) {
+            if (video1) video1.pause();
+            if (video2) video2.pause();
+            clearInterval(rafID);
+            rafID = null;
+            return;
+        }
+
+        if (timestamp - lastProcessed < intervalMs) return;
+
+        // ------------------ DRAW FRAME ------------------
+        if (ctx1 && canvas1 && video1.videoWidth && video1.videoHeight) {
             ctx1.drawImage(video1, 0, 0, canvas1.width, canvas1.height);
         }
-        if(ctx2 && canvas2 && video2.videoWidth && video2.videoHeight){
+        if (ctx2 && canvas2 && video2.videoWidth && video2.videoHeight) {
             ctx2.drawImage(video2, 0, 0, canvas2.width, canvas2.height);
         }
 
-        // send frames to mediapipe
+        // ------------------ SEND TO MEDIAPIPE ------------------
         try {
-            if(pose1 && canvas1) await pose1.send({ image: canvas1 });
-            if(pose2 && canvas2) await pose2.send({ image: canvas2 });
-        } catch(e){
+            if (pose1 && canvas1) await pose1.send({ image: canvas1 });
+            if (pose2 && canvas2) await pose2.send({ image: canvas2 });
+        } catch (e) {
             console.warn("pose send error:", e);
         }
 
         lastProcessed = timestamp;
 
-        // compute similarity & angles for scoring (safe)
+        // ------------------ SCORING ------------------
         const similarity = compareLandmarks(landmarks1, landmarks2);
-        // compute joint angles for scoring using filtered arrays (safer)
+
         const f1 = filterLandmarks(landmarks1, tmpSkill);
         const f2 = filterLandmarks(landmarks2, tmpSkill);
         const ang1 = computeJointAnglesFromFiltered(f1, tmpSkill);
         const ang2 = computeJointAnglesFromFiltered(f2, tmpSkill);
 
-        // angle-based score (simple)
         let angleScore = null;
-        if(tmpSkill === 'kick'){
-            if(ang1.leftKnee != null && ang2.leftKnee != null){
-                const dL = Math.abs((ang1.leftKnee||0) - (ang2.leftKnee||0));
-                const sL = 1 - Math.min(1, dL/180);
-                const dR = Math.abs((ang1.rightKnee||0) - (ang2.rightKnee||0));
-                const sR = 1 - Math.min(1, dR/180);
+
+        if (tmpSkill === 'kick') {
+            if (ang1.leftKnee != null && ang2.leftKnee != null) {
+                const dL = Math.abs((ang1.leftKnee || 0) - (ang2.leftKnee || 0));
+                const sL = 1 - Math.min(1, dL / 180);
+                const dR = Math.abs((ang1.rightKnee || 0) - (ang2.rightKnee || 0));
+                const sR = 1 - Math.min(1, dR / 180);
                 angleScore = (sL + sR) / 2;
             }
         } else {
-            if(ang1.leftElbow != null && ang2.leftElbow != null){
-                const dL = Math.abs((ang1.leftElbow||0) - (ang2.leftElbow||0));
-                const sL = 1 - Math.min(1, dL/180);
-                const dR = Math.abs((ang1.rightElbow||0) - (ang2.rightElbow||0));
-                const sR = 1 - Math.min(1, dR/180);
+            if (ang1.leftElbow != null && ang2.leftElbow != null) {
+                const dL = Math.abs((ang1.leftElbow || 0) - (ang2.leftElbow || 0));
+                const sL = 1 - Math.min(1, dL / 180);
+                const dR = Math.abs((ang1.rightElbow || 0) - (ang2.rightElbow || 0));
+                const sR = 1 - Math.min(1, dR / 180);
                 angleScore = (sL + sR) / 2;
             }
         }
 
-        // combine similarity & angleScore (if available) with stricter weighting
         let finalScoreForFrame = null;
-        if(similarity !== null && angleScore !== null){
-            // make combination stricter: raise angle importance slightly
+
+        if (similarity !== null && angleScore !== null) {
             finalScoreForFrame = (similarity * 0.55) + (angleScore * 0.45);
-        } else if(similarity !== null){
+        } else if (similarity !== null) {
             finalScoreForFrame = similarity;
-        } else if(angleScore !== null){
+        } else if (angleScore !== null) {
             finalScoreForFrame = angleScore;
         }
 
-        // apply small temporal smoothing using a short buffer
-        if(finalScoreForFrame !== null){
+        if (finalScoreForFrame !== null) {
             frameScores.push(finalScoreForFrame);
-            if(frameScores.length > FRAME_BUFFER) frameScores.shift();
-            const sum = frameScores.reduce((a,b)=>a+b,0);
+            if (frameScores.length > FRAME_BUFFER) frameScores.shift();
+
+            const sum = frameScores.reduce((a, b) => a + b, 0);
             const smooth = sum / frameScores.length;
 
             tmpScore += smooth;
             tmpCount++;
             averageScore = (tmpScore / tmpCount);
-            console.log("Frame finalScore:", finalScoreForFrame.toFixed(4), "Smooth:", smooth.toFixed(4), "Avg:", averageScore.toFixed(4));
+
+            console.log(
+                "Frame finalScore:",
+                finalScoreForFrame.toFixed(4),
+                "Smooth:",
+                smooth.toFixed(4),
+                "Avg:",
+                averageScore.toFixed(4)
+            );
+
             tampilkanNilai(tmpSkill);
         }
-    }
 
-    rafID = requestAnimationFrame(processFrames);
+    } finally {
+        processFrames.isBusy = false;
+    }
 }
+
 
 // ------------------ Video setup and preload ------------------
 
@@ -849,7 +882,6 @@ function getTanggal(){
 }
 
 // export to xlsx (unchanged)
-/*
 function exportToXLS() {
     let newDate = getTanggal();
     newDate = newDate.replaceAll("/", "-");
@@ -865,43 +897,6 @@ function exportToXLS() {
     XLSX.utils.book_append_sheet(wb, ws, "Data Hasil Penilaian");
     XLSX.writeFile(wb, "PMM_data_analisa_video_"+ newDate +".xlsx");
 }
-*/
-
-// export to xlsx (fixed for Android WebView)
-function exportToXLS() {
-    let newDate = getTanggal();
-    newDate = newDate.replaceAll("/", "-").replaceAll(" ", "_").replaceAll(":", "-");
-
-    const table = document.getElementById('table-record');
-    if (!table) return;
-
-    const ws = XLSX.utils.table_to_sheet(table, {
-        cellDates: true,
-        dateNF: "dd/mm/yyyy hh:mm:ss",
-    });
-
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Data Hasil Penilaian");
-
-    // Jika tidak ada Android interface → browser biasa
-    if (!window.Android) {
-        XLSX.writeFile(wb, "PMM_data_analisa_video_" + newDate + ".xlsx");
-        return;
-    }
-
-    // Jika di WebView Android → convert ke Base64
-    const base64 = XLSX.write(wb, {
-        bookType: "xlsx",
-        type: "base64"
-    });
-
-    // Kirim ke Android untuk disimpan sebagai file
-    window.Android.saveExcelBase64(
-        base64,
-        "PMM_data_analisa_video_" + newDate + ".xlsx"
-    );
-}
-
 
 function showAllRecord(){
     let allScoreWrapper = document.getElementById('all-score-wrapper');
